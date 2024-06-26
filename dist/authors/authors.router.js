@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthorRouter = void 0;
+const hono_1 = require("hono");
+const authors_contreller_1 = require("./authors.contreller");
+exports.AuthorRouter = new hono_1.Hono();
+exports.AuthorRouter.get("/author", authors_contreller_1.getAllAuthorsData);
+exports.AuthorRouter.get("/author/:id", authors_contreller_1.getOneAuthorsData);
+exports.AuthorRouter.post("/author", authors_contreller_1.createAuthorsData);
+exports.AuthorRouter.delete("/author/:id", authors_contreller_1.deleteAuthorsData);
+exports.AuthorRouter.put("/author/:id", authors_contreller_1.updateAuthorsData);
