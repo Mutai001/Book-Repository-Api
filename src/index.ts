@@ -1,83 +1,44 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
-import { number } from 'zod'
+import { cors } from 'hono/cors'
 import "dotenv/config"
-import { logger } from 'hono/logger'
-import { csrf } from 'hono/csrf'
 import { prometheus } from '@hono/prometheus'
-import { html, raw } from 'hono/html'
-import { trimTrailingSlash } from 'hono/trailing-slash'
-import { HTTPException } from 'hono/http-exception'
-import { timeout } from 'hono/timeout'
+import { bookRouter } from './books/books.router';
 
 
+const app = new Hono();
+const {printMetrics, registerMetrics} = prometheus()
 
-
-
-const app = new Hono().basePath('/api')
-
-const customTimeoutException = () =>
-  new HTTPException(408, {
-    message: `Request timeout after waiting for more than 10 seconds`,
+//3rd party middleware
+app.use('*', registerMetrics)
+app.use('*', cors())
+app.use(
+  '*',
+  cors({
+    origin: ['http://localhost:5173','https://red-sea-0ebf43a0f.5.azurestaticapps.net'],
+    allowHeaders: ['X-Custom-Header', 'Upgrade-Insecure-Requests'],
+    allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
+    exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+    maxAge: 600,
+    credentials: true,
   })
-const { printMetrics, registerMetrics } = prometheus()
-
-// inbuilt middlewares
-app.use(logger())
-app.use(csrf()) 
-app.use(trimTrailingSlash())
-app.use('*', registerMetrics)
-app.use('/', timeout(10000, customTimeoutException))
-app.use('*', registerMetrics)
-
-
-
-
-app.get('/ok', (c) => {
-  return c.text('The server is running☑️')
-})
-app.get('/timeout', async (c) => {
-  await new Promise((resolve) => setTimeout(resolve, 11000))
-  return c.text("data after 5 seconds", 200)
-})
-app.get('/metrics', printMetrics)
-
-
-//Routes
-// app.route('/', UserRouter)
- // api/auth/register   or api/auth/login
-
-
-
-// default route
+)
+//default routes
 app.get('/', (c) => {
-  const html = `
-    <h1>Welcome to Hono</h1>
-    <p>Server is running on port ${process.env.PORT}</p>
-  `
-  return c.html(html);
-});
-
-
-// const port = 3000 
-const port = Number(process.env.PORT)
-console.log(`Server is running on port ${process.env.PORT}`);
+  return c.text('The server is running 🚀🚀 ')
+})
+app.notFound((c) => {
+  return c.text('Route Not Found', 404)
+})
 app.get('/metrics', printMetrics)
 
-console.log('Registered routes: ', app.routes);
+
+//custom routes
+app.route("/",bookRouter)
+
+console.log("Server is running on port " + process.env.PORT || 3000)
 
 serve({
   fetch: app.fetch,
-  port: 3000,
-});
-
-
-
-
-
-
-
-
-
-
-
+  port:Number(process.env.PORT || 3000)
+})

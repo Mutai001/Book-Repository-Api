@@ -1,11 +1,22 @@
-import { Hono } from "hono";
-import { createBooksData, deleteBooksData, getAllBooksData, getOneBooksData, updateBooksData} from './books.contreller'
+import {Hono} from "hono"
+import { deleteBook, getBookById, insertBook, listAllBooks, updateBook } from "./books.contreller";
+import { createBookValidator } from '../validators/Svalidator'
 import { zValidator } from "@hono/zod-validator";
 
+export const bookRouter = new Hono();
 
-export const BookRouter = new Hono();
-BookRouter.get("/book", getAllBooksData);
-BookRouter.get("/book/:id", getOneBooksData);
-BookRouter.post("/book", createBooksData)
-BookRouter.delete("/book/:id", deleteBooksData);
-BookRouter.put("/book/:id", updateBooksData);
+//get all cities
+bookRouter.get('/books', listAllBooks)
+
+//get city by id
+bookRouter.get('/book/:id', getBookById)
+
+//insert city
+bookRouter.post('/books', zValidator('json',createBookValidator,(result,c)=>{
+    if(!result.success) return c.text( result.error.message + "😒",400)}), insertBook)
+
+//update city
+bookRouter.put('/books/:id', updateBook)
+
+//delete city
+bookRouter.delete('/books/:id', deleteBook)

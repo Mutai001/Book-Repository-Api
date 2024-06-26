@@ -1,67 +1,77 @@
 import { Context } from "hono";
-import { CreateBook, DeleteBook, fetchOneBook, getAllBooks,UpdateBook } from "./books.service";
-
-//fetch all book
-export const getAllBooksData = async (c: Context) => {
-
- try {
-        //limit the number of books to be returned
-
-        const limit = Number(c.req.query('limit'))
-
-        const data = await getAllBooks(limit);
-        if (data == null || data.length == 0) {
-            return c.text("book not found", 404)
-        }
-        return c.json(data, 200);
-    } catch (error: any) {
-        return c.json({ error: error?.message }, 400)
-    }
+import { booksService, deleteBookService, getBookByIdService, insertBookService, updateBookService } from "./books.service";
 
 
-}
-
-// fetch one book
-export const getOneBooksData = async (c: Context) => {
-    const id = c.req.param("id")
-    const book = await fetchOneBook(parseInt(id))
-    if(book === undefined){
-        return c.json({message: "No book found"},404)
-    }
-    return c.json(book,200)
-}
-
-//create book
-export const createBooksData = async (c: Context, next: Function) => {
-    
-    try{
-       const book = await c.req.json()
-    const response = await CreateBook(book)
-    return c.json({message: response},201)
-    } catch(err){
-        return c.json({message: err},500)
-    }
-}
-
-//update book
-export const updateBooksData = async (c: Context) => {
+//list of cities
+export const listAllBooks = async (c: Context) => {
     try {
-        const id = parseInt(c.req.param('id'), 10);
-        if (isNaN(id)) return c.text('Invalid id', 400);
-        const book = await c.req.json();
-        const Book = await UpdateBook(id, book);
-
-        if (!UpdateBook) return c.text('book not updated', 400);
-        return c.json({ msg: UpdateBook }, 200);
+        const books = await booksService();
+        if (books === null) return c.text("No books found");
+        return c.json(books, 200);
     } catch (error: any) {
-        return c.json({ error: error?.message }, 400);
+        return c.text("Error while fetching books", 400);
     }
 }
 
-//delete book
-export const deleteBooksData = async (c: Context) => {
-    const id = c.req.param("id")   
-    const response = await DeleteBook(parseInt(id))
-    return c.json({message: response},200)
+//get city by id
+export const getBookById = async (c: Context) => {
+    const id = parseInt(c.req.param("id"));
+    try {
+        if (isNaN(id)) return c.text("Invalid ID", 400);
+        //search for city    
+        const book = await getBookByIdService(id);   
+        if (book === undefined) return c.text("Book not found 😒", 404);
+        return c.json(book, 200);
+    } catch (error: any) {
+        return c.text(error?.message, 400);
+    }
+}
 
+//insert book
+export const insertBook = async (c: Context) => {
+    try {
+        const book = await c.req.json();
+        const createdBook = await insertBookService(book);
+        if (createdBook === undefined) {
+            return c.text("Error while inserting book", 400);
+        }
+        return c.json(createdBook, 201);
+    } catch (error: any) {
+        return c.text(error?.message, 400);
+    }
+}
+
+//update city
+export const updateBook = async (c: Context) => {
+    // return c.text("Not implemented yet", 501);
+    const id = Number(c.req.param("id"));
+    const book = await c.req.json();
+    try {
+        if (isNaN(id)) return c.text("Invalid ID", 400);
+        //search for city
+        const existingBook = await getBookByIdService(id);
+        if (existingBook === undefined) return c.text("Book not found", 404);
+        //update city
+        const updatedBook = await updateBookService(id, book);
+        return c.json({ msg: updatedBook}, 200);
+    } catch (error: any) {
+        return c.text(error?.message, 400);
+    }
+}
+
+//delete city
+export const deleteBook = async (c: Context) => {
+    // return c.text("Not implemented yet", 501);
+    const id = Number(c.req.param("id"));
+    try {
+        if (isNaN(id)) return c.text("Invalid ID", 400);
+        //search for book
+        const existingBook = await getBookByIdService(id);
+        if (existingBook === undefined) return c.text("Book not found", 404);
+        //delete book
+        const deletedBook = await deleteBookService(id);
+        return c.json({ msg: deletedBook }, 200);
+    } catch (error: any) {
+        return c.text(error?.message, 400);
+    }
 }
