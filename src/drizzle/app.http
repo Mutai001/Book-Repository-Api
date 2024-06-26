@@ -1,0 +1,71 @@
+###
+GET http://localhost:3000/api
+
+
+###
+GET http://localhost:3000/api/timeout
+
+###
+ GET http://localhost:3000/api/metrics
+
+
+###
+GET http://localhost:3000/api/authors
+
+
+###
+GET http://localhost:3000/api/authors
+###
+GET http://localhost:3000/api/authors
+
+
+###
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+   
+}
+
+###
+
+PUT http://localhost:3000/api/authors/1
+Content-Type: application/json
+
+{
+
+  
+}
+###
+DELETE http://localhost:3000/api/autors/2
+
+
+###
+GET http://localhost:3000/api/books
+
+
+###
+GET http://localhost:3000/api/books/4
+
+###
+
+POST http://localhost:3000/api/books
+Content-Type: application/json
+
+{
+ 
+
+  }
+
+###
+
+PUT http://localhost:3000/api/books/4
+Content-Type: application/json
+
+{
+    
+}
+###
+DELETE http://localhost:3000/api/books/1
+
+
