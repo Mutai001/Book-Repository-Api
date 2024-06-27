@@ -1,0 +1,25 @@
+###
+GET http://localhost:3000/books
+
+
+###
+PUT http://localhost:3000/books/1
+Content-Type:  application/json
+    
+{
+ "title": "Dolls House",
+}
+
+###
+POST http://localhost:3000/books
+Content-Type: application/json
+
+ {
+
+    "title": "metric_name",
+    "author": "Kim",
+     "year": 2002
+ }
+
+###
+DELETE http://localhost:3000/books/7

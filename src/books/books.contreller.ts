@@ -13,12 +13,12 @@ export const listAllBooks = async (c: Context) => {
     }
 }
 
-//get city by id
+//get book by id
 export const getBookById = async (c: Context) => {
     const id = parseInt(c.req.param("id"));
     try {
         if (isNaN(id)) return c.text("Invalid ID", 400);
-        //search for city    
+        //search for book    
         const book = await getBookByIdService(id);   
         if (book === undefined) return c.text("Book not found 😒", 404);
         return c.json(book, 200);
@@ -41,25 +41,26 @@ export const insertBook = async (c: Context) => {
     }
 }
 
-//update city
+//update book
 export const updateBook = async (c: Context) => {
     // return c.text("Not implemented yet", 501);
-    const id = Number(c.req.param("id"));
+    const id = parseInt(c.req.param("id"));
+     if (isNaN(id)) return c.text("Invalid ID", 400);
     const book = await c.req.json();
     try {
-        if (isNaN(id)) return c.text("Invalid ID", 400);
-        //search for city
+        //search for book
         const existingBook = await getBookByIdService(id);
         if (existingBook === undefined) return c.text("Book not found", 404);
-        //update city
+        //update book
         const updatedBook = await updateBookService(id, book);
+        if(!updatedBook) return c.text("Error while updating book", 400);
         return c.json({ msg: updatedBook}, 200);
     } catch (error: any) {
         return c.text(error?.message, 400);
     }
 }
 
-//delete city
+//delete book
 export const deleteBook = async (c: Context) => {
     // return c.text("Not implemented yet", 501);
     const id = Number(c.req.param("id"));

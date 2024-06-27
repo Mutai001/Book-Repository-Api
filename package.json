@@ -10,6 +10,7 @@
         "@hono/prometheus": "^1.0.1",
         "@hono/zod-validator": "^0.2.2",
         "@neondatabase/serverless": "^0.9.3",
+        "axios": "^1.7.2",
         "bcrypt": "^5.1.1",
         "dotenv": "^16.4.5",
         "drizzle-orm": "^0.31.1",

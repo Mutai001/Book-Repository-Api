@@ -23,9 +23,6 @@ app.use(
     credentials: true,
   })
 )
-//default routes
-// app.get('/', (c) => {
-  // return c.text('The server is running ☑️😊 ')
   app.get('/', (c) => {
   const html = `<!DOCTYPE html>
 <html lang="en">

@@ -1,14 +1,14 @@
 ###
-GET http://localhost:3000/
+GET http://localhost:8000/
 
 ###
-GET http://localhost:3000/books
+GET http://localhost:8000/books
 
 ###
-GET http://localhost:3000/book/1
+GET http://localhost:8000/book/1
 
 ###
-POST http://localhost:3000/books
+POST http://localhost:8000/books
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:3000/book/1
+PUT http://localhost:8000/books/1
 Content-Type: application/json
 
 {
@@ -26,4 +26,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/book/10
+DELETE http://localhost:8000/book/10
