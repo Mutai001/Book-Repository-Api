@@ -143,7 +143,7 @@ app.use(
 <nav>
     <a href="#">Home</a>
     <a href="#">About</a>
-    <a href="#">Books</a>
+    <a href="# GET http://localhost:3000/books">Books</a>
     <a href="#">Contact</a>
 </nav>
 
